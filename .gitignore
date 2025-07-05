@@ -9,3 +9,6 @@ target/
 dbt_packages/
 logs/
 # end dbt Cloud content
+infra/secrets/
+*.tfstate
+*.tfstate.backup
