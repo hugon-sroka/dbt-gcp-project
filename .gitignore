@@ -12,3 +12,4 @@ logs/
 infra/secrets/
 *.tfstate
 *.tfstate.backup
+terraform.tfvars
