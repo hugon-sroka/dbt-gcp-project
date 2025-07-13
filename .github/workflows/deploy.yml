@@ -1,0 +1,69 @@
+name: Deployment Pipeline
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+env:
+  GCP_PROJECT_ID: "your-project-id" # Dodaj w Secrets
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: "1.5.0"
+
+      - name: Terraform Apply (Dev)
+        run: |
+          cd infra/
+          terraform apply -auto-approve -var="environment=dev"
+        env:
+          GOOGLE_CREDENTIALS: ${{ secrets.DEV_SA_KEY }}
+
+  dbt_dev:
+    needs: terraform
+    runs-on: ubuntu-latest
+    environment: dev
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+
+      - name: Install DBT
+        run: pip install dbt-bigquery
+
+      - name: Run DBT (Dev)
+        run: |
+          cd dbt/
+          dbt run --target dev --select +my_model
+        env:
+          DBT_DEV_KEY_PATH: ${{ secrets.DEV_SA_KEY }}
+          GCP_PROJECT_ID: ${{ env.GCP_PROJECT_ID }}
+
+  dbt_prod:
+    needs: [dbt_dev, approval] # Wymaga ręcznego zatwierdzenia
+    runs-on: ubuntu-latest
+    environment: prod
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+
+      - name: Run DBT (Prod)
+        run: |
+          cd dbt/
+          dbt run --target prod --select +my_model
+        env:
+          DBT_PROD_KEY_PATH: ${{ secrets.PROD_SA_KEY }}
+          GCP_PROJECT_ID: ${{ env.GCP_PROJECT_ID }}
