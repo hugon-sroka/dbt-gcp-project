@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
 
 env:
-  GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+  GCP_PROJECT_ID: ${{ vars.GCP_PROJECT_ID }}
 
 jobs:
   terraform:
@@ -21,7 +21,7 @@ jobs:
       - name: Terraform Apply (Dev)
         run: |
           cd infra/
-          terraform apply -auto-approve -var="environment=dev"
+          terraform apply -auto-approve -var="environment=dev" -var="project_id=${{ vars.GCP_PROJECT_ID }}"
         env:
           GOOGLE_CREDENTIALS: ${{ secrets.DEV_SA_KEY }}
 
@@ -46,7 +46,7 @@ jobs:
           dbt run --target dev --select +my_model
         env:
           DBT_DEV_KEY_PATH: ${{ secrets.DEV_SA_KEY }}
-          GCP_PROJECT_ID: ${{ env.GCP_PROJECT_ID }}
+          GCP_PROJECT_ID: ${{ vars.GCP_PROJECT_ID }}
 
   dbt_prod:
     needs: dbt_dev # Wymaga ręcznego zatwierdzenia
@@ -65,5 +65,5 @@ jobs:
           cd dbt/
           dbt run --target prod --select +my_model
         env:
-          DBT_PROD_KEY_PATH: ${{ secrets.PROD_SA_KEY }}
-          GCP_PROJECT_ID: ${{ env.GCP_PROJECT_ID }}
+          DBT_PROD_KEY_PATH: ${{ secrets.DEV_SA_KEY }}
+          GCP_PROJECT_ID: ${{ vars.GCP_PROJECT_ID }}
