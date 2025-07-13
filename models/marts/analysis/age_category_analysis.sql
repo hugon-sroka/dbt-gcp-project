@@ -20,7 +20,7 @@ with age_groups AS (
 SELECT
     age_group,
     Category,
-    COUNT(*) as purchase_count,
+    CAST(COUNT(*)as INT64) as purchase_count,
     ROUND(COUNT(*) * 100 / SUM(count(*)) OVER (PARTITION BY age_group ORDER BY age_group), 1) AS percentage_in_age_group
 FROM age_groups
 GROUP BY age_group, Category

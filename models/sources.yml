@@ -1,0 +1,8 @@
+version: 2
+
+sources:
+  - name: gcp_shopping_data # Nazwa źródła (np. 'gcp_raw_data' lub 'production_tables')
+    database: my-dbt-project-4321790  # ID projektu GCP (np. 'data-analytics-123')
+    schema: shopping_sales     # Nazwa datasetu w BigQuery (np. 'raw_events')
+    tables:
+      - name: shopping_trends_updated             # Tabela w BigQuery
