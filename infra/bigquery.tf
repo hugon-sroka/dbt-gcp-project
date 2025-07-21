@@ -1,5 +1,5 @@
 resource "google_bigquery_dataset" "analytics_dev" {
-  dataset_id    = "analytics_${var.environemnt}"
+  dataset_id    = "analytics_${var.environmnt}"
   friendly_name = "Dev Dataset for DBT"
   location      = "EU" 
   description   = "Dataset for development environment"
