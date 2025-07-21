@@ -20,7 +20,7 @@ resource "google_project_iam_member" "dbt_bq_role" {
 
 # Nadaj uprawnienia SA do datasetu dev
 resource "google_bigquery_dataset_iam_member" "analytics_dev_access" {
-  dataset_id = google_bigquery_dataset.analytics_dev.dataset_id
+  dataset_id = google_bigquery_dataset.analytics_dev.dataset_id 
   role       = "roles/bigquery.dataEditor"
   member     = "serviceAccount:${google_service_account.dbt_sa.email}"
 }
