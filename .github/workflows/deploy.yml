@@ -18,6 +18,18 @@ jobs:
         with:
           terraform_version: "1.5.0"
 
+
+      - name: Terraform Init
+        run: |
+          cd infra/
+          terraform init
+
+      # 🔥 KLUCZOWA ZMIANA: Napraw uprawnienia providera
+      - name: Fix Terraform provider permissions
+        run: |
+          chmod -R +x .terraform/providers/  # Nadaj uprawnienia wykonania
+          ls -la .terraform/providers/       # Opcjonalne: sprawdź uprawnienia (do debugu)
+
       - name: Terraform Apply (Dev)
         run: |
           cd infra/
