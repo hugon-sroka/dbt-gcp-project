@@ -7,3 +7,9 @@ variable "environment" {
   description = "environemnt (dev/prod)"
   default = "dev"
 }
+
+variable "region" {
+  description = "GCP Region"
+  type        = string
+  default     = "europe-west3"  # przykładowo
+}
