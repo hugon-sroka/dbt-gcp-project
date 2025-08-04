@@ -78,5 +78,3 @@ text
 ![Pipeline Architecture](diagram-architecture.png)
 
 ---
-
-*For a graphical version of the architecture, use the included diagram file or generate your own using the provided scheme.*
